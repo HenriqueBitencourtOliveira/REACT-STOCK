@@ -2,7 +2,11 @@ export const CATEGORIES = [
     "Jogos",
     "Livros",
     "Brinquedos",
-    "Acessórios"
+    "Hardware",
+    "Periféricos",
+    "Smartphone",
+    "Escritório"
+
 ]
 
 export default class StockItem {

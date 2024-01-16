@@ -1,8 +1,10 @@
 import { useRef, useState } from "react";
 import StockItem, { CATEGORIES } from "../models/StockItem";
 import useStock from "../hooks/useStock";
+import ModalMessage from "./Modal/ModalMessage";
 
 export default function ItemForm({ itemToUpdadete }) {
+  const { addItem, updateItem } = useStock();
   const defaultItem = {
     name: "",
     description: "",
@@ -13,11 +15,11 @@ export default function ItemForm({ itemToUpdadete }) {
   const [item, setItem] = useState(
     itemToUpdadete ? itemToUpdadete : defaultItem
   );
-  const { addItem, updateItem } = useStock();
   const inputRef = useRef(null);
+  const [message, setMessage] = useState(false);
 
   const handleChange = (ev) => {
-    setItem(current => {
+    setItem((current) => {
       return {
         ...current,
         [ev.target.name]: ev.target.value,
@@ -31,12 +33,12 @@ export default function ItemForm({ itemToUpdadete }) {
     try {
       if (itemToUpdadete) {
         updateItem(itemToUpdadete.id, item);
-        alert("Item atulizado");
+        setMessage(true);
       } else {
         const validItem = new StockItem(item);
         addItem(validItem);
         setItem(defaultItem);
-        alert("Item registrado!");
+        setMessage(true);
       }
     } catch (err) {
       console.log(err.message);
@@ -122,6 +124,15 @@ export default function ItemForm({ itemToUpdadete }) {
             onChange={handleChange}
           ></textarea>
         </div>
+        <ModalMessage
+          Open={message}
+          textMessage={
+            itemToUpdadete
+              ? `O item ${item.name} foi atualizado com sucesso!`
+              : `O item foi registrado com sucesso!`
+          }
+          close={() => setMessage(!message)}
+        />
         <button className="button is-primary is-large">Salvar</button>
       </form>
     </>
